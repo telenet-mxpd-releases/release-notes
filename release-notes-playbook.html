@@ -1,0 +1,702 @@
+<title>Release Notes Playbook — ExpertDesk</title>
+<style>
+/* ── CLEVR CORPORATE TOKENS ─────────────────────────────────────────────── */
+:root {
+  --navy:        #003349;
+  --navy-deep:   #021028;
+  --cyan:        #50E1E1;
+  --cyan-light:  #E5F6F8;
+  --cyan-mid:    #7FA9AE;
+  --coral:       #FF5B51;
+  --coral-light: #FFCBC2;
+  --amber:       #F59E0B;
+  --amber-light: #FFFBEB;
+  --white:       #FFFFFF;
+  --surface:     #F4F7F8;
+  --border:      #DCE7E9;
+  --text:        #003349;
+  --text-muted:  #68969F;
+  --high:        #D97706;
+  --high-bg:     #FFFBEB;
+  --low:         #16a34a;
+  --low-bg:      #f0fdf4;
+  --font-heading: 'Calibri Light', Calibri, 'Segoe UI', system-ui, sans-serif;
+  --font-body:    Calibri, 'Segoe UI', system-ui, sans-serif;
+  --font-mono:    'Cascadia Code', Consolas, 'Courier New', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.page { max-width: 1120px; margin: 0 auto; padding: 0 0 64px; }
+
+/* ── HERO ────────────────────────────────────────────────────────────────── */
+.hero {
+  background: var(--navy);
+  color: var(--white);
+  padding: 52px 56px 44px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 340px; height: 100%;
+  background: linear-gradient(135deg, transparent 40%, rgba(80,225,225,0.10) 100%);
+  pointer-events: none;
+}
+.hero-label {
+  font-family: var(--font-heading);
+  font-size: 10px; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--cyan); margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: var(--font-heading);
+  font-size: 32px; font-weight: 300;
+  line-height: 1.2; margin-bottom: 8px;
+}
+.hero h1 strong { font-weight: 700; }
+.hero-subtitle {
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 36px;
+}
+
+/* ── COMMIT ANATOMY ──────────────────────────────────────────────────────── */
+.anatomy-wrap {
+  background: var(--navy-deep);
+  border: 1px solid rgba(80,225,225,0.15);
+  border-left: 4px solid var(--cyan);
+  border-radius: 2px;
+  padding: 28px 32px 36px;
+  margin-bottom: 36px;
+  overflow-x: auto;
+}
+.anatomy-heading {
+  font-size: 9px; letter-spacing: 0.20em; text-transform: uppercase;
+  color: var(--cyan-mid); margin-bottom: 18px;
+}
+.commit-line {
+  font-family: var(--font-mono);
+  font-size: 17px; line-height: 1.5;
+  display: flex; flex-wrap: wrap; gap: 0; align-items: baseline;
+  margin-bottom: 28px;
+  user-select: none;
+}
+/* Dim all siblings when one is hovered */
+.commit-line:has(.seg:hover) .seg:not(:hover) { opacity: 0.2; }
+
+.seg {
+  position: relative; padding: 3px 5px; border-radius: 2px;
+  cursor: default;
+  transition: opacity 0.12s;
+}
+.seg-type   { color: var(--cyan); }
+.seg-ticket { color: var(--amber); margin: 0 4px; }
+.seg-desc   { color: rgba(255,255,255,0.92); }
+.seg-sep    { color: rgba(255,255,255,0.30); margin: 0 4px; }
+.seg-impl   { color: var(--coral); }
+
+.seg-tooltip {
+  pointer-events: none;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%; transform: translateX(-50%);
+  background: rgba(2,16,40,0.96);
+  border: 1px solid rgba(80,225,225,0.25);
+  border-radius: 2px;
+  padding: 7px 11px;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-size: 11px;
+  transition: opacity 0.12s;
+  z-index: 10;
+}
+.seg:hover .seg-tooltip { opacity: 1; }
+.seg-tooltip strong {
+  color: var(--cyan); display: block;
+  font-size: 9px; letter-spacing: 0.14em;
+  text-transform: uppercase; margin-bottom: 3px;
+}
+
+/* Legend row */
+.anatomy-legend {
+  display: flex; flex-wrap: wrap; gap: 20px;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 11px; color: rgba(255,255,255,0.55);
+}
+.legend-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+
+.hero-meta {
+  display: flex; flex-wrap: wrap;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  padding-top: 24px; gap: 0;
+}
+.hero-meta-item {
+  padding-right: 32px; margin-right: 32px;
+  border-right: 1px solid rgba(255,255,255,0.12);
+}
+.hero-meta-item:last-child { border-right: none; }
+.hero-meta-label {
+  font-size: 9px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--cyan); margin-bottom: 3px;
+}
+.hero-meta-value { font-size: 13px; color: rgba(255,255,255,0.9); }
+
+/* ── NAV ─────────────────────────────────────────────────────────────────── */
+.nav {
+  background: var(--navy-deep); padding: 0 56px;
+  display: flex; overflow-x: auto;
+  border-bottom: 2px solid var(--cyan);
+  scrollbar-width: none;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav a {
+  display: block; padding: 14px 18px;
+  font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: rgba(255,255,255,0.50); text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+}
+.nav a:hover { color: var(--cyan); border-bottom-color: var(--cyan); }
+
+/* ── CONTENT / SECTIONS ──────────────────────────────────────────────────── */
+.content { padding: 0 40px; }
+
+.section {
+  background: var(--white); margin-top: 28px;
+  border-radius: 2px; overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,51,73,0.07);
+}
+.section-head {
+  background: var(--navy); color: var(--white);
+  padding: 20px 32px; display: flex; align-items: center; gap: 16px;
+}
+.section-num {
+  font-family: var(--font-heading); font-size: 11px;
+  font-weight: 700; letter-spacing: 0.12em; color: var(--cyan); min-width: 28px;
+}
+.section-head h2 {
+  font-family: var(--font-heading); font-size: 14px;
+  font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.section-body { padding: 32px; }
+
+.sub-title {
+  font-family: var(--font-heading); font-size: 10px;
+  font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--cyan-mid); margin: 28px 0 14px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.sub-title:first-child { margin-top: 0; }
+
+p { margin-bottom: 12px; }
+ul, ol { padding-left: 20px; margin-bottom: 12px; }
+li { margin-bottom: 5px; }
+
+/* ── CALLOUTS ────────────────────────────────────────────────────────────── */
+.callout {
+  border-radius: 2px; padding: 16px 20px;
+  margin: 20px 0; border-left: 4px solid; font-size: 13px;
+}
+.clabel {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; margin-bottom: 6px; display: block;
+}
+.c-critical { background: #FFF0EE; border-color: var(--coral); }
+.c-critical .clabel { color: var(--coral); }
+.c-high { background: var(--high-bg); border-color: var(--high); }
+.c-high .clabel { color: var(--high); }
+.c-info { background: var(--cyan-light); border-color: var(--cyan-mid); }
+.c-info .clabel { color: var(--navy); }
+.c-success { background: var(--low-bg); border-color: var(--low); }
+.c-success .clabel { color: var(--low); }
+.c-navy { background: var(--navy); color: var(--white); border-color: var(--cyan); }
+.c-navy .clabel { color: var(--cyan); }
+
+/* ── TABLES ──────────────────────────────────────────────────────────────── */
+.table-wrap { overflow-x: auto; margin: 16px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  background: var(--navy); color: rgba(255,255,255,0.70);
+  text-align: left; padding: 10px 14px;
+  font-family: var(--font-heading); font-weight: 400;
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+}
+td {
+  padding: 11px 14px; border-bottom: 1px solid var(--border);
+  vertical-align: top; line-height: 1.55;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #F8FBFC; }
+
+/* ── BADGES ──────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-block; padding: 2px 9px; border-radius: 2px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; white-space: nowrap;
+}
+.b-feat     { background: #0e7490; color: white; }
+.b-fix      { background: var(--low); color: white; }
+.b-data     { background: var(--high); color: white; }
+.b-config   { background: var(--cyan-mid); color: white; }
+.b-refactor { background: #6d28d9; color: white; }
+.b-chore    { background: #6b7280; color: white; }
+
+/* ── CODE BLOCKS ─────────────────────────────────────────────────────────── */
+pre {
+  background: var(--navy-deep); color: #B8D4D9;
+  border-radius: 2px; padding: 20px 24px;
+  font-family: var(--font-mono); font-size: 12px;
+  line-height: 1.8; overflow-x: auto; margin: 16px 0;
+  border-left: 4px solid var(--cyan);
+}
+code {
+  font-family: var(--font-mono); font-size: 12px;
+  background: var(--cyan-light); padding: 1px 5px; border-radius: 2px;
+  color: var(--navy);
+}
+pre code { background: none; padding: 0; color: inherit; }
+
+/* ── FORMAT PATTERNS ─────────────────────────────────────────────────────── */
+.pattern-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0;
+}
+@media (max-width: 700px) { .pattern-grid { grid-template-columns: 1fr; } }
+.pattern-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 2px; padding: 16px 20px;
+}
+.pattern-card-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;
+}
+.pattern-card pre { margin: 0; font-size: 11px; }
+
+/* ── SPRINT STEPS ────────────────────────────────────────────────────────── */
+.sprint-step {
+  display: flex; gap: 20px; padding: 20px 0;
+  border-bottom: 1px solid var(--border); align-items: flex-start;
+}
+.sprint-step:last-child { border-bottom: none; }
+.sprint-num {
+  background: var(--navy); color: var(--cyan);
+  font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+  min-width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 2px; flex-shrink: 0; margin-top: 2px;
+}
+.sprint-content { flex: 1; }
+.sprint-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+.sprint-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+.sprint-body code { font-size: 11px; }
+
+/* ── FAQ ─────────────────────────────────────────────────────────────────── */
+details {
+  border-bottom: 1px solid var(--border); padding: 16px 0;
+}
+details:last-child { border-bottom: none; }
+summary {
+  font-weight: 700; font-size: 14px; cursor: pointer;
+  list-style: none; display: flex; align-items: center; gap: 10px;
+  color: var(--navy);
+}
+summary::-webkit-details-marker { display: none; }
+summary::before {
+  content: '+';
+  font-family: var(--font-mono); font-size: 14px; color: var(--cyan);
+  font-weight: 700; min-width: 16px;
+}
+details[open] summary::before { content: '−'; }
+.faq-body { padding: 12px 0 0 26px; font-size: 13px; line-height: 1.65; color: #444; }
+.faq-body p { margin-bottom: 8px; }
+.faq-body code { font-size: 11px; }
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hero { padding: 32px 24px; }
+  .anatomy-wrap { padding: 20px; }
+  .commit-line { font-size: 13px; }
+  .hero-meta-item { border-right: none; padding-right: 0; margin-right: 0; }
+  .nav { padding: 0 16px; }
+  .content { padding: 0 16px; }
+  .section-body { padding: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seg, .seg-tooltip { transition: none; }
+}
+</style>
+
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Telenet — ExpertDesk</div>
+  <h1><strong>Release Notes</strong> Playbook</h1>
+  <p class="hero-subtitle">Write commits that document themselves. Every push updates the release notes automatically — no changelog to maintain, no handover document to write.</p>
+
+  <!-- Commit anatomy — hover each coloured segment to isolate it -->
+  <div class="anatomy-wrap">
+    <div class="anatomy-heading">Hover any segment to focus it</div>
+    <div class="commit-line" role="img" aria-label="Example: [feat!] INCHMGPLTM-5274 Add Priority field to Request — run SUB_MigrateOrgName after deploy">
+      <span class="seg seg-type">
+        [feat!]
+        <span class="seg-tooltip"><strong>Type + flag</strong>Category and action marker</span>
+      </span>
+      <span class="seg seg-ticket">
+        INCHMGPLTM-5274
+        <span class="seg-tooltip"><strong>Ticket reference</strong>Jira or Clevr support ID</span>
+      </span>
+      <span class="seg seg-desc">
+        Add Priority field to Request
+        <span class="seg-tooltip"><strong>Description</strong>What changed, in plain terms</span>
+      </span>
+      <span class="seg seg-sep" aria-hidden="true"> — </span>
+      <span class="seg seg-impl">
+        run SUB_MigrateOrgName after deploy
+        <span class="seg-tooltip"><strong>Implementation steps</strong>Copied into Actions Required</span>
+      </span>
+    </div>
+    <div class="anatomy-legend" aria-hidden="true">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div>Type tag</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Ticket reference</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,0.7)"></div>Description</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--coral)"></div>Implementation steps (! commits only)</div>
+    </div>
+  </div>
+
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Audience</div>
+      <div class="hero-meta-value">Developers</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Version</div>
+      <div class="hero-meta-value">1.0</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Release notes site</div>
+      <div class="hero-meta-value">telenet-mxpd-releases.github.io/release-notes/</div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav" aria-label="Page sections">
+  <a href="#format">Format</a>
+  <a href="#types">Commit Types</a>
+  <a href="#actions">Actions Required</a>
+  <a href="#sprint">Sprint Lifecycle</a>
+  <a href="#viewing">Viewing Notes</a>
+  <a href="#faq">FAQ</a>
+</nav>
+
+<div class="content">
+
+<!-- SECTION 01: FORMAT -->
+<div class="section" id="format">
+  <div class="section-head">
+    <span class="section-num">01</span>
+    <h2>The Commit Format</h2>
+  </div>
+  <div class="section-body">
+    <p>Every commit that should appear in the release notes follows one of two patterns. Copy the one you need and fill in the blanks.</p>
+
+    <div class="pattern-grid">
+      <div class="pattern-card">
+        <div class="pattern-card-label">Standard commit</div>
+        <pre><code>[type] TICKET Description</code></pre>
+        <p style="font-size:12px;color:var(--text-muted);margin:8px 0 0;">[fix] ST-25829 Incorrect status after SLA breach</p>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-card-label">Commit requiring action after deploy</div>
+        <pre><code>[type!] TICKET Description — steps</code></pre>
+        <p style="font-size:12px;color:var(--text-muted);margin:8px 0 0;">[data!] INCHMGPLTM-5274 Rename field — run SUB_MigrateOrgName</p>
+      </div>
+    </div>
+
+    <div class="sub-title">Rules</div>
+    <ul>
+      <li>The type tag and its brackets are required: <code>[feat]</code>, not <code>feat:</code> or <code>feat</code>.</li>
+      <li>A ticket reference is recommended for all types except <code>[chore]</code>. Untagged commits still appear in the release notes — under an Untagged warning section — but no ticket is needed.</li>
+      <li>The <code>!</code> goes inside the brackets: <code>[data!]</code>. Implementation steps follow a space-em-dash-space: <code> — </code>.</li>
+      <li>Any commit containing <code>[skip release-notes]</code> is ignored by the pipeline entirely. The service uses this marker on its own automated commits to avoid infinite loops; you should not need it.</li>
+    </ul>
+
+    <div class="callout c-info" style="margin-top:24px;">
+      <span class="clabel">Ticket formats</span>
+      Two formats are accepted: Jira IDs (<code>INCHMGPLTM-5273</code>) and Clevr support IDs (<code>ST-25829</code>). Both appear as plain text in the release notes — no hyperlinks are generated automatically.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 02: TYPES -->
+<div class="section" id="types">
+  <div class="section-head">
+    <span class="section-num">02</span>
+    <h2>Commit Types</h2>
+  </div>
+  <div class="section-body">
+    <p>The type tag determines which section of the release notes receives your commit. Use the one that describes what the commit actually does.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tag</th>
+            <th>Section in release notes</th>
+            <th>Ticket required?</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge b-feat">[feat]</span></td>
+            <td>Features</td>
+            <td>Recommended</td>
+            <td><code>[feat] INCHMGPLTM-5273 Add Priority field to Request</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge b-fix">[fix]</span></td>
+            <td>Bug Fixes</td>
+            <td>Recommended</td>
+            <td><code>[fix] ST-25829 Incorrect status after SLA breach</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge b-data">[data]</span></td>
+            <td>Data Changes</td>
+            <td>Recommended</td>
+            <td><code>[data!] INCHMGPLTM-5280 Rename Organisation to Department — run SUB_MigrateOrgName</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge b-config">[config]</span></td>
+            <td>Configuration</td>
+            <td>Optional</td>
+            <td><code>[config] Update default SLA thresholds for Priority 1</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge b-refactor">[refactor]</span></td>
+            <td>Refactoring</td>
+            <td>Optional</td>
+            <td><code>[refactor] INCHMGPLTM-5261 Consolidate notification microflows</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge b-chore">[chore]</span></td>
+            <td>Maintenance</td>
+            <td>Not required</td>
+            <td><code>[chore] Remove unused microflows in Portal module</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout c-high">
+      <span class="clabel">Data Changes get extra attention</span>
+      The <strong>Data Changes</strong> section is reviewed first by operations before every deployment. If your commit touches the database schema or content, use <code>[data]</code> — and add the <code>!</code> flag with exact conversion microflow instructions if a manual step is needed.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 03: ACTIONS REQUIRED -->
+<div class="section" id="actions">
+  <div class="section-head">
+    <span class="section-num">03</span>
+    <h2>Actions Required</h2>
+  </div>
+  <div class="section-body">
+    <p>The <code>!</code> flag on any commit type adds an entry to the <strong>⚠ Actions Required</strong> section at the top of the release notes — the first thing operations reads before deploying. Use it whenever someone needs to do something manually before or after the deployment goes live.</p>
+
+    <div class="sub-title">What to write after the separator</div>
+    <p>The text after <code> — </code> is copied verbatim into Actions Required. Write it as a direct instruction, not a description of what was done:</p>
+
+    <div class="pattern-grid">
+      <div class="pattern-card">
+        <div class="pattern-card-label" style="color:var(--coral);">Don't — describes, doesn't instruct</div>
+        <pre style="border-left-color:var(--coral);"><code>[data!] INCHMGPLTM-5280 Rename field
+— a migration is needed</code></pre>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-card-label" style="color:var(--low);">Do — tells operations exactly what to run</div>
+        <pre style="border-left-color:var(--low);"><code>[data!] INCHMGPLTM-5280 Rename field
+— run SUB_MigrateOrgName after deploy</code></pre>
+      </div>
+    </div>
+
+    <div class="sub-title">Common use cases</div>
+    <ul>
+      <li><code>[data!]</code> — a conversion microflow must be executed after deployment</li>
+      <li><code>[config!]</code> — a constant or application setting must be changed in the cloud portal</li>
+      <li><code>[feat!]</code> — a role permission must be granted before the feature is accessible</li>
+    </ul>
+  </div>
+</div>
+
+<!-- SECTION 04: SPRINT LIFECYCLE -->
+<div class="section" id="sprint">
+  <div class="section-head">
+    <span class="section-num">04</span>
+    <h2>Sprint Lifecycle</h2>
+  </div>
+  <div class="section-body">
+    <p>The release notes collect all commits pushed to <code>main</code> after the sprint boundary was set. Starting a new sprint takes one commit.</p>
+
+    <div class="sprint-step">
+      <div class="sprint-num">1</div>
+      <div class="sprint-content">
+        <div class="sprint-title">Bump the sprint number</div>
+        <div class="sprint-body">
+          At the start of each sprint, one designated person edits <code>CURRENT_RELEASE.txt</code> in the root of the Mendix repo and sets it to the new sprint identifier — for example <code>M26.07</code>. Commit and push this change to <code>main</code>. Every commit after this point belongs to the new sprint.
+        </div>
+      </div>
+    </div>
+
+    <div class="sprint-step">
+      <div class="sprint-num">2</div>
+      <div class="sprint-content">
+        <div class="sprint-title">Develop as normal</div>
+        <div class="sprint-body">
+          Push commits to <code>main</code> using the <code>[type]</code> format. The release notes regenerate automatically at midnight UTC each night — no action needed during the sprint.
+        </div>
+      </div>
+    </div>
+
+    <div class="sprint-step">
+      <div class="sprint-num">3</div>
+      <div class="sprint-content">
+        <div class="sprint-title">Trigger manually when needed</div>
+        <div class="sprint-body">
+          Go to <strong>telenet-mxpd-releases/release-notes-service</strong> → Actions → <strong>Generate Release Notes</strong> → Run workflow. Use this before a deployment or after a batch of commits you want reflected immediately.
+        </div>
+      </div>
+    </div>
+
+    <div class="sprint-step">
+      <div class="sprint-num">4</div>
+      <div class="sprint-content">
+        <div class="sprint-title">Share the link at sprint close</div>
+        <div class="sprint-body">
+          Copy the release notes URL and send it to operations and Telenet. The page stays live permanently — it is never deleted when a new sprint starts.
+        </div>
+      </div>
+    </div>
+
+    <div class="callout c-info">
+      <span class="clabel">Sprint identifier format</span>
+      Use <code>M&lt;year&gt;.&lt;sprint&gt;</code> — for example <code>M26.07</code> for the seventh sprint of 2026. The release notes URL replaces the dot with a hyphen: <code>…/release-notes/M26-07.html</code>.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 05: VIEWING -->
+<div class="section" id="viewing">
+  <div class="section-head">
+    <span class="section-num">05</span>
+    <h2>Viewing Release Notes</h2>
+  </div>
+  <div class="section-body">
+    <div class="sub-title">URL format</div>
+    <pre><code>https://telenet-mxpd-releases.github.io/release-notes/{sprint-slug}.html</code></pre>
+    <p>Replace the dot in the sprint number with a hyphen to form the slug:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Sprint in CURRENT_RELEASE.txt</th><th>URL slug</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>M26.06</code></td><td><code>M26-06.html</code></td></tr>
+          <tr><td><code>M26.07</code></td><td><code>M26-07.html</code></td></tr>
+          <tr><td><code>M26.12</code></td><td><code>M26-12.html</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-title">What the page contains</div>
+    <ul>
+      <li>An <strong>⚠ Actions Required</strong> section at the top — present only if at least one <code>!</code> commit exists in the sprint.</li>
+      <li>Sections for each commit type used: Features, Bug Fixes, Data Changes, Configuration, Refactoring, Maintenance.</li>
+      <li>Empty sections are hidden automatically.</li>
+      <li>An <strong>⚠ Untagged</strong> section at the bottom if any commits did not match the format — a reminder to update those messages.</li>
+    </ul>
+
+    <div class="callout c-navy">
+      <span class="clabel">Sharing with Telenet</span>
+      The page is publicly accessible — no GitHub login required. Copy the URL directly into the sprint-close email. The link stays valid indefinitely.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 06: FAQ -->
+<div class="section" id="faq">
+  <div class="section-head">
+    <span class="section-num">06</span>
+    <h2>FAQ</h2>
+  </div>
+  <div class="section-body">
+
+    <details>
+      <summary>What happens if I forget the ticket reference?</summary>
+      <div class="faq-body">
+        <p>The commit still appears in the release notes, in the correct section based on its type tag — the ticket field is simply left blank. Use this intentionally for <code>[chore]</code> commits where a ticket number doesn't apply.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>What if I push a commit with no type tag at all?</summary>
+      <div class="faq-body">
+        <p>It lands in an <strong>⚠ Untagged</strong> section at the bottom of the page — flagged for review. Nothing is lost, but it signals that the commit message needs attention. You can amend the message and retrigger the workflow to move it into the right section.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Can I add a commit to the release notes after they've been published?</summary>
+      <div class="faq-body">
+        <p>Yes. The release notes for a sprint are regenerated from scratch on every run, not appended to. Push the corrected commit, confirm that <code>CURRENT_RELEASE.txt</code> still contains the right sprint number, then trigger the workflow manually. The published page updates within a minute.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>What is <code>[skip release-notes]</code> and should I ever use it?</summary>
+      <div class="faq-body">
+        <p>The pipeline uses this marker on its own automated commits to avoid processing them in the next run. You should not need it. If you intentionally want a commit to be completely invisible to the release notes — a typo fix in an unrelated file, for example — you can add it to your commit message, but this should be rare.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>The release notes are out of date. How do I refresh them immediately?</summary>
+      <div class="faq-body">
+        <p>Go to <strong>telenet-mxpd-releases/release-notes-service</strong> → <strong>Actions</strong> → <strong>Generate Release Notes</strong> → <strong>Run workflow</strong>. This triggers an immediate run identical to the nightly scheduled run.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Two developers pushed commits at the same time. Is there a conflict risk?</summary>
+      <div class="faq-body">
+        <p>The pipeline only reads commits from the Mendix repo; two developers pushing simultaneously does not cause a conflict there. The only write-back is the generated markdown file committed to the Mendix repo, and the HTML pushed to GitHub Pages — both are done by a single automated workflow run. If two runs ever overlap (unlikely given the midnight schedule), one will pull and retry once on conflict.</p>
+      </div>
+    </details>
+
+  </div>
+</div>
+
+</div><!-- /.content -->
+
+<div style="text-align:center; padding: 40px 0 20px; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted);">
+  CLEVR — Confidential — 2026
+</div>
+
+</div><!-- /.page -->
