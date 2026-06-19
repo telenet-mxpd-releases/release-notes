@@ -577,9 +577,9 @@ details[open] summary::before { content: '−'; }
     <div class="sprint-step">
       <div class="sprint-num">3</div>
       <div class="sprint-content">
-        <div class="sprint-title">Trigger manually when needed</div>
+        <div class="sprint-title">Regenerate when needed</div>
         <div class="sprint-body">
-          Go to <strong>telenet-mxpd-releases/release-notes-service</strong> → Actions → <strong>Generate Release Notes</strong> → Run workflow. Use this before a deployment or after a batch of commits you want reflected immediately.
+          Click the <strong>↺ Regenerate</strong> button at the top of the release notes page — it triggers the workflow and shows a confirmation inline. Alternatively, go to <strong>telenet-mxpd-releases/release-notes-service</strong> → Actions → <strong>Generate Release Notes</strong> → Run workflow. Use either method before a deployment or after a batch of commits you want reflected immediately.
         </div>
       </div>
     </div>
@@ -630,7 +630,9 @@ details[open] summary::before { content: '−'; }
       <li>An <strong>⚠ Actions Required</strong> section at the top — present only if at least one <code>!</code> commit exists in the sprint.</li>
       <li>Sections for each commit type used: Features, Bug Fixes, Data Changes, Configuration, Refactoring, Maintenance.</li>
       <li>Empty sections are hidden automatically.</li>
+      <li>Each entry ends with a 7-character git SHA — for example <code>a3f8c21</code> — so you can trace any line back to its exact commit.</li>
       <li>An <strong>⚠ Untagged</strong> section at the bottom if any commits did not match the format — a reminder to update those messages.</li>
+      <li>A <strong>↺ Regenerate</strong> button in the header that triggers a fresh run of the pipeline without leaving the page.</li>
     </ul>
 
     <div class="callout c-navy">
