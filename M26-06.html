@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Release Notes M26.06 &mdash; CLEVR</title>
+<style>
+/*
+ * CLEVR Corporate Design System
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Extracted from: Corporate Deck 2026.pptx (theme: "CLEVR - light (white) layout")
+ * Extracted: 2026-05-21
+ * Source file: C:\Users\langea\Documents\AI\telenet-cloud-migration\Corporate Deck 2026.pptx
+ *
+ * Usage
+ * ─────
+ * Option A — Link externally (adjust path as needed):
+ *   <link rel="stylesheet" href="../../templates/clevr-corporate.css">
+ *
+ * Option B — Copy the full content into a <style> block for a self-contained HTML.
+ *
+ * Available component classes (quick reference)
+ * ─────────────────────────────────────────────
+ * Layout:       .page
+ * Hero:         .hero  .hero-label  .hero-subtitle  .hero-meta  .hero-meta-item
+ *               .hero-meta-label  .hero-meta-value
+ * Navigation:   .nav  (contains <a> links with href="#anchor")
+ * Content:      .content
+ * Sections:     .section  .section-head  .section-num  .section-body  .sub-title
+ * Callouts:     .callout + .c-critical | .c-high | .c-info | .c-success | .c-navy
+ *               .clabel (inside callout for label text)
+ * Tables:       .table-wrap  table  th  td  (standard elements styled globally)
+ * Badges:       .badge + .b-critical | .b-high | .b-medium | .b-low | .b-locked | .b-blocker
+ * Phase blocks: .phase-block  .phase-head.sp-a | .sp-b  .phase-tag.tag-a | .tag-b
+ *               .phase-title  .phase-weeks  .phase-body  .gate-box
+ * Action items: .action-item  .action-num (add .urgent for coral bg)  .action-content
+ *               .action-title  .action-meta
+ * Code:         pre  code  (standard elements styled globally)
+ * Runbook:      .runbook-step  .runbook-time  .runbook-desc  .runbook-owner
+ */
+
+/* ── TOKENS ──────────────────────────────────────────────────────────────────── */
+:root {
+  --navy:        #003349;
+  --navy-deep:   #021028;
+  --cyan:        #50E1E1;
+  --cyan-light:  #E5F6F8;
+  --cyan-mid:    #7FA9AE;
+  --coral:       #FF5B51;
+  --coral-light: #FFCBC2;
+  --white:       #FFFFFF;
+  --surface:     #F4F7F8;
+  --border:      #DCE7E9;
+  --text:        #003349;
+  --text-muted:  #68969F;
+  --high:        #D97706;
+  --high-bg:     #FFFBEB;
+  --low:         #16a34a;
+  --low-bg:      #f0fdf4;
+  --font-heading: 'Calibri Light', Calibri, 'Segoe UI', system-ui, sans-serif;
+  --font-body:    Calibri, 'Segoe UI', system-ui, sans-serif;
+  --font-mono:    'Cascadia Code', Consolas, 'Courier New', monospace;
+}
+
+/* ── RESET ───────────────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────────────────────────── */
+.page { max-width: 1120px; margin: 0 auto; padding: 0 0 64px; }
+
+/* ── HERO ────────────────────────────────────────────────────────────────────── */
+.hero {
+  background: var(--navy);
+  color: var(--white);
+  padding: 52px 56px 44px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 340px; height: 100%;
+  background: linear-gradient(135deg, transparent 40%, rgba(80,225,225,0.12) 100%);
+  pointer-events: none;
+}
+.hero-label {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.hero h1 strong { font-weight: 700; }
+.hero-subtitle {
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 36px;
+  max-width: 640px;
+}
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  padding-top: 24px;
+  gap: 0;
+}
+.hero-meta-item {
+  padding-right: 32px;
+  margin-right: 32px;
+  border-right: 1px solid rgba(255,255,255,0.12);
+}
+.hero-meta-item:last-child { border-right: none; }
+.hero-meta-label {
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 3px;
+}
+.hero-meta-value { font-size: 13px; color: rgba(255,255,255,0.9); }
+
+/* ── NAV ─────────────────────────────────────────────────────────────────────── */
+.nav {
+  background: var(--navy-deep);
+  padding: 0 56px;
+  display: flex;
+  overflow-x: auto;
+  border-bottom: 2px solid var(--cyan);
+  scrollbar-width: none;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav a {
+  display: block;
+  padding: 14px 18px;
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.50);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+.nav a:hover { color: var(--cyan); border-bottom-color: var(--cyan); }
+
+/* ── CONTENT ─────────────────────────────────────────────────────────────────── */
+.content { padding: 0 40px; }
+
+/* ── SECTIONS ────────────────────────────────────────────────────────────────── */
+.section {
+  background: var(--white);
+  margin-top: 28px;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,51,73,0.07);
+}
+.section-head {
+  background: var(--navy);
+  color: var(--white);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-num {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--cyan);
+  min-width: 28px;
+}
+.section-head h2 {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.section-body { padding: 32px; }
+
+.sub-title {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cyan-mid);
+  margin: 28px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.sub-title:first-child { margin-top: 0; }
+
+p { margin-bottom: 12px; }
+ul, ol { padding-left: 20px; margin-bottom: 12px; }
+li { margin-bottom: 5px; }
+
+/* ── CALLOUTS ────────────────────────────────────────────────────────────────── */
+.callout {
+  border-radius: 2px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-left: 4px solid;
+  font-size: 13px;
+}
+.clabel {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
+}
+.c-critical { background: #FFF0EE; border-color: var(--coral); }
+.c-critical .clabel { color: var(--coral); }
+.c-high { background: var(--high-bg); border-color: var(--high); }
+.c-high .clabel { color: var(--high); }
+.c-info { background: var(--cyan-light); border-color: var(--cyan-mid); }
+.c-info .clabel { color: var(--navy); }
+.c-success { background: var(--low-bg); border-color: var(--low); }
+.c-success .clabel { color: var(--low); }
+.c-navy { background: var(--navy); color: var(--white); border-color: var(--cyan); }
+.c-navy .clabel { color: var(--cyan); }
+
+/* ── TABLES ──────────────────────────────────────────────────────────────────── */
+.table-wrap { overflow-x: auto; margin: 16px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  background: var(--navy);
+  color: rgba(255,255,255,0.70);
+  text-align: left;
+  padding: 10px 14px;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.55;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #F8FBFC; }
+
+/* ── BADGES ──────────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.b-critical { background: var(--coral);    color: white; }
+.b-high     { background: var(--high);     color: white; }
+.b-medium   { background: var(--cyan-mid); color: white; }
+.b-low      { background: var(--low);      color: white; }
+.b-locked   { background: var(--navy); color: var(--cyan); border: 1px solid var(--cyan); }
+.b-blocker  { background: var(--navy-deep); color: var(--coral); border: 1px solid var(--coral); font-weight: 900; }
+
+/* ── PHASE BLOCKS ────────────────────────────────────────────────────────────── */
+.phase-block {
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.phase-head {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.phase-head.sp-a { background: var(--navy); }
+.phase-head.sp-b { background: var(--navy-deep); }
+.phase-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 1px;
+}
+.tag-a { background: var(--cyan); color: var(--navy); }
+.tag-b { background: var(--coral); color: white; }
+.phase-title { font-family: var(--font-heading); font-weight: 300; font-size: 16px; color: white; }
+.phase-weeks { font-size: 11px; color: rgba(255,255,255,0.45); margin-left: auto; }
+.phase-body { padding: 20px 24px; }
+.gate-box {
+  margin-top: 18px;
+  padding: 12px 18px;
+  background: var(--navy);
+  color: white;
+  border-radius: 2px;
+  font-size: 13px;
+  border-left: 4px solid var(--cyan);
+}
+.gate-box strong { color: var(--cyan); }
+
+/* ── ACTION ITEMS ────────────────────────────────────────────────────────────── */
+.action-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.action-item:last-child { border-bottom: none; }
+.action-num {
+  background: var(--navy);
+  color: var(--cyan);
+  border-radius: 50%;
+  width: 30px; height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.action-num.urgent { background: var(--coral); color: white; }
+.action-content { flex: 1; }
+.action-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; color: var(--navy); }
+.action-meta { font-size: 12px; color: var(--text-muted); line-height: 1.55; }
+.action-meta code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--cyan-light);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+/* ── CODE BLOCKS ─────────────────────────────────────────────────────────────── */
+pre {
+  background: var(--navy-deep);
+  color: #B8D4D9;
+  border-radius: 2px;
+  padding: 20px 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.8;
+  overflow-x: auto;
+  margin: 16px 0;
+  border-left: 4px solid var(--cyan);
+}
+code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--cyan-light);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+pre code { background: none; padding: 0; }
+
+/* ── RUNBOOK ─────────────────────────────────────────────────────────────────── */
+.runbook-step {
+  display: flex;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.runbook-step:last-child { border-bottom: none; }
+.runbook-time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cyan);
+  font-weight: 700;
+  min-width: 80px;
+  background: var(--navy);
+  text-align: center;
+  padding: 4px 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+.runbook-desc { flex: 1; font-size: 13px; }
+.runbook-owner { font-size: 11px; color: var(--text-muted); margin-top: 5px; font-style: italic; }
+
+/* ── PRINT ───────────────────────────────────────────────────────────────────── */
+@media print {
+  body { background: white; font-size: 11px; }
+  .nav { display: none; }
+  .section { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+  .phase-block { break-inside: avoid; }
+  .hero, .section-head, .phase-head { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hero { padding: 32px 24px; }
+  .hero-meta-item { border-right: none; padding-right: 0; margin-right: 0; }
+  .nav { padding: 0 16px; }
+  .content { padding: 0 16px; }
+  .section-body { padding: 20px; }
+  .phase-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .phase-weeks { margin-left: 0; }
+}
+
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Telenet &mdash; ExpertDesk Release Notes</div>
+  <h1><strong>Release Notes</strong> M26.06</h1>
+  <div class="hero-subtitle">Automatically generated from commits on the main branch.</div>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Sprint</div>
+      <div class="hero-meta-value">M26.06</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Generated</div>
+      <div class="hero-meta-value">2026-06-19</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Author</div>
+      <div class="hero-meta-value">Clevr</div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+
+</nav>
+
+<div class="content">
+
+
+</div><!-- /.content -->
+
+<!-- FOOTER -->
+<div style="text-align:center; padding: 40px 0 20px; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7FA9AE;">
+  CLEVR &mdash; Confidential &mdash; 2026
+</div>
+
+</div><!-- /.page -->
+</body>
+</html>
