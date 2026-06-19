@@ -435,7 +435,64 @@ pre code { background: none; padding: 0; }
   <div class="hero-label">Telenet &mdash; ExpertDesk Release Notes</div>
   <h1><strong>Release Notes</strong> M26.06</h1>
   <div class="hero-subtitle">Automatically generated from commits on the main branch.</div>
-
+<div style="margin-top:24px;display:flex;align-items:center;gap:16px;">
+  <button id="trigger-btn"
+    onclick="triggerWorkflow()"
+    style="background:transparent;border:1px solid #50E1E1;color:#50E1E1;
+           padding:8px 18px;border-radius:2px;cursor:pointer;font-size:12px;
+           letter-spacing:0.08em;text-transform:uppercase;font-family:inherit;">
+    &#8634; Regenerate
+  </button>
+  <span id="trigger-status" style="font-size:12px;color:rgba(255,255,255,0.65);"></span>
+</div>
+<script>
+async function triggerWorkflow() {
+  var token = localStorage.getItem('rn_pat');
+  if (!token) {
+    token = prompt('GitHub PAT with workflow scope (stored in your browser only):');
+    if (!token) return;
+    localStorage.setItem('rn_pat', token);
+  }
+  var btn = document.getElementById('trigger-btn');
+  var status = document.getElementById('trigger-status');
+  btn.disabled = true;
+  btn.style.opacity = '0.5';
+  btn.textContent = 'Triggering…';
+  fetch(
+    'https://api.github.com/repos/telenet-mxpd-releases/release-notes-service/actions/workflows/generate.yml/dispatches',
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ref: 'main'})
+    }
+  ).then(function(r) {
+    if (r.status === 204) {
+      status.textContent = 'Triggered — page will update in ~60 seconds';
+      status.style.color = '#50E1E1';
+    } else if (r.status === 401) {
+      localStorage.removeItem('rn_pat');
+      status.textContent = 'Invalid token — cleared. Click again to re-enter.';
+      status.style.color = '#FF5B51';
+    } else {
+      r.json().catch(function() { return {}; }).then(function(d) {
+        status.textContent = 'Error: ' + (d.message || r.status);
+        status.style.color = '#FF5B51';
+      });
+    }
+  }).catch(function(e) {
+    status.textContent = 'Error: ' + e.message;
+    status.style.color = '#FF5B51';
+  }).finally(function() {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.textContent = '↺ Regenerate';
+  });
+}
+</script>
   <div class="hero-meta">
     <div class="hero-meta-item">
       <div class="hero-meta-label">Sprint</div>
